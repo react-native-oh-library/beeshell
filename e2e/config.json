@@ -1,5 +1,0 @@
-{
-  "setupTestFrameworkScriptFile": "./init.js",
-  "testEnvironment": "node",
-  "verbose": true
-}
