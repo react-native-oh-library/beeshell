@@ -1,5 +1,5 @@
 {
-  "name": "beeshell",
+  "name": "@react-native-ohos/beeshell",
   "version": "2.0.11",
   "description": "A UI library for react native.",
   "main": "index.ts",
@@ -9,6 +9,10 @@
   },
   "harmony": {
     "alias": "beeshell"
+  },
+  "dependencies": {
+  	"create-react-class": "^15.6.3",
+  	"moment": "^2.27.0"
   },
   "keywords": [
     "beeshell",
