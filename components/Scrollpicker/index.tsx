@@ -37,6 +37,7 @@ export class Scrollpicker extends React.Component<ScrollpickerProps, Scrollpicke
   scrollers = []
   targetItemHeight = null
   containerHeight = null
+  scrollEndDragTimers = {}
 
   static defaultProps = {
     style: {},
@@ -66,6 +67,7 @@ export class Scrollpicker extends React.Component<ScrollpickerProps, Scrollpicke
     }
 
     this.scrollers = []
+    this.scrollEndDragTimers = {}
   }
 
   initialize (props) {
@@ -153,8 +155,11 @@ export class Scrollpicker extends React.Component<ScrollpickerProps, Scrollpicke
   }
 
   componentDidUpdate (prevProps) {
+    const listChanged = JSON.stringify(prevProps.list) !== JSON.stringify(this.props.list)
+    const proportionChanged = JSON.stringify(prevProps.proportion) !== JSON.stringify(this.props.proportion)
+    const offsetCountChanged = prevProps.offsetCount !== this.props.offsetCount
 
-    if (prevProps !== this.props) {
+    if (listChanged || proportionChanged || offsetCountChanged) {
       const data = this.initialize(this.props)
 
       this.setState(
@@ -355,7 +360,36 @@ export class Scrollpicker extends React.Component<ScrollpickerProps, Scrollpicke
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={[styles.scrollerContentContainer]}
                 onScrollEndDrag={(e) => {
-                  this.onScroll(scrollIndex, (e as any).nativeEvent.contentOffset.y)
+                  if (this.scrollEndDragTimers[scrollIndex]) {
+                    clearTimeout(this.scrollEndDragTimers[scrollIndex])
+                    delete this.scrollEndDragTimers[scrollIndex]
+                  }
+
+                  const scrollOffsetY = e?.nativeEvent?.contentOffset?.y
+                  if (scrollOffsetY === undefined || scrollOffsetY === null) {
+                    return
+                  }
+
+                  this.scrollEndDragTimers[scrollIndex] = setTimeout(() => {
+                    this.onScroll(scrollIndex, scrollOffsetY)
+                    delete this.scrollEndDragTimers[scrollIndex]
+                  }, 50)
+                }}
+                onMomentumScrollBegin={() => {
+                  if (this.scrollEndDragTimers[scrollIndex]) {
+                    clearTimeout(this.scrollEndDragTimers[scrollIndex])
+                    delete this.scrollEndDragTimers[scrollIndex]
+                  }
+                }}
+                onMomentumScrollEnd={(e) => {
+                  if (this.scrollEndDragTimers[scrollIndex]) {
+                    clearTimeout(this.scrollEndDragTimers[scrollIndex])
+                    delete this.scrollEndDragTimers[scrollIndex]
+                  }
+                  const scrollOffsetY = e?.nativeEvent?.contentOffset?.y
+                  if (scrollOffsetY !== undefined && scrollOffsetY !== null) {
+                    this.onScroll(scrollIndex, scrollOffsetY)
+                  }
                 }}
               >
                 {scrollItem.map((item, index) => {

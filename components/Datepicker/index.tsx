@@ -126,8 +126,12 @@ export class Datepicker extends React.Component<DatepickerProps, any> {
     return days
   }
 
-  componentDidUpdate (preProps) {
-    if (preProps !== this.props) {
+  componentDidUpdate (prevProps) {
+    if (
+      prevProps.date !== this.props.date ||
+      prevProps.startYear !== this.props.startYear ||
+      prevProps.numberOfYears !== this.props.numberOfYears
+    ) {
       this.setState({
         ...this.initialize(this.props)
       })

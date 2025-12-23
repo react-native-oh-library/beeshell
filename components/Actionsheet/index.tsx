@@ -72,7 +72,7 @@ export class Actionsheet extends SlideModal<ActionsheetProps> {
       <ScrollView
         style={[
           styles.body,
-          maxShowNum != null ? {maxHeight: 50 * maxShowNum + 30} : {},
+          maxShowNum != null ? {maxHeight: 50 * maxShowNum} : {},
         ]}
         alwaysBounceVertical={maxShowNum != null}>
         {data.map((item, index) => {
@@ -147,9 +147,7 @@ export class Actionsheet extends SlideModal<ActionsheetProps> {
               // const { height } = e.nativeEvent.layout
               // console.log('Actionsheet SafeAreaView height: ', height)
             }}>
-            <SafeAreaView style={{flex: 1}}>
               <View style={{height: 60}} />
-            </SafeAreaView>
           </View>
         ) : null}
       </View>
