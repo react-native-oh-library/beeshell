@@ -316,11 +316,16 @@ export class Scrollpicker extends React.Component<ScrollpickerProps, Scrollpicke
       }
     }
 
+    const threshold = 1
+    const diff = Math.abs(newScrollHeight - scrollHeight)
+
+    if (diff > threshold) {
     this.scrollers[scrollIndex] && this.scrollers[scrollIndex].scrollTo && this.scrollers[scrollIndex].scrollTo({
       x: 0,
       y: newScrollHeight,
       animated: animated === false ? false : true
     })
+    }
 
     const targetItemIndex = newScrollHeight / targetItemHeight
     return targetItemIndex
